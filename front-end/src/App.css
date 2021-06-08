@@ -1,38 +1,49 @@
 .App {
-  text-align: center;
+  display: grid;
+  
+  grid-template-columns: 12vw 1fr;
+  grid-template-rows: 1fr 12vh;
+  grid-template-areas: "search messages"
+  "search  send-message";
+  
+  height: 100vh;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+.search {
+  grid-area: search;
+  background-color: purple;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
+.search ul {
+  list-style: none;
+  padding: 0;
 }
 
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
+.search li {
+  width: 100%;
+  height: 12vh;
   display: flex;
-  flex-direction: column;
+  flex-direction: row-reverse;
   align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+  justify-content: space-around;
 }
 
-.App-link {
-  color: #61dafb;
+.search li:hover {
+  cursor: pointer;
+  background-color: #fab3;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.search li img {
+  height: 100%;
+  width: auto;
+}
+
+.messages {
+  grid-area: messages;
+  background-color: #4f88;
+}
+
+.send-message {
+  grid-area: send-message;
+  background-color: #faba;
 }

@@ -1,8 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import './App.css';
 
+const placeholderDog = 'https://static.thenounproject.com/png/61386-200.png';
+
 const api = {
-  getMessages: ()=> fetch('/messages')
+  getMessages: (username)=> fetch('/messages?username='+username)
     .then(response=> response.json()),
 
   postMessage: (message)=> fetch('/message', {
@@ -14,18 +16,30 @@ const api = {
 
 function App() {
   const [messages, setMessages] = useState([]);
+  const [username, setUsername] = useState('nik');
+  const [nextFrom, setNextFrom] = useState('');
+  const [nextTo, setNextTo] = useState('');
+  const [nextContent, setNextContent] = useState('');
+
+  const [selectedConvo, setSelectedConvo] = useState('');
+
+  const conversations = useMemo(()=> [
+    ...(new Set(
+      messages.filter(({ from, to })=> (
+        from === username || to === username
+      )).map(({ from, to }) => (
+        from === username ? to : from
+      ))
+    ))
+  ], [messages, username]);
 
   const refresh = ()=> api
-    .getMessages()
+    .getMessages(username)
     .then(({ messages }) => setMessages(messages));
   
   useEffect(()=>{
     refresh();
   }, []);
-
-  const [nextFrom, setNextFrom] = useState('');
-  const [nextTo, setNextTo] = useState('');
-  const [nextContent, setNextContent] = useState('');
 
   const send = ()=>{
     api.postMessage({
@@ -40,14 +54,36 @@ function App() {
   
   return (
     <div className="App">
+      <div className='search'>
+        <ul>
+          {
+            conversations.map(other=> (
+              <li key={other}
+                  className={other === selectedConvo ? 'selected' : ''}
+                  onClick={()=> (
+                    other !== selectedConvo ?
+                    setSelectedConvo(other):
+                    setSelectedConvo('')
+                  )}>
+                <span>{other}</span>
+                <img src={placeholderDog} />
+              </li>
+            ))
+          }
+        </ul>
+      </div>
+
       <div className='messages'>
         {
-          messages.map(msg=> (
-            <div key={msg.id}>
-              <span>{msg.from} to {msg.to}</span>
-              <span>{msg.content}</span>
-            </div>
-          ))
+          messages
+            .filter(msg => !selectedConvo ||
+                         [msg.to, msg.from].includes(selectedConvo) )
+            .map(msg=> (
+              <div key={msg.id}>
+                <span>{msg.from} to {msg.to}</span>
+                <span>{msg.content}</span>
+              </div>
+            ))
         }
       </div>
       

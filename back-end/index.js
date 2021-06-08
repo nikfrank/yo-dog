@@ -6,13 +6,15 @@ app.use(express.json());
 const port = 4000;
 
 const inMemMessages = [
-  { id: 0, from: 'nik', to: 'chico', content: 'woof' },
-  { id: 1, from: 'chico', to: 'nik', content: 'sniff sniff woof [tail wag]' },
+  { id: 0, from: 'nik', to: 'chico', content: 'woof', time: 1623166099515 },
+  { id: 1, from: 'chico', to: 'nik', content: 'woof [tail wag]', time: 1623166102515 },
+  { id: 2, from: 'yoyo', to: 'nik', content: '[tail wag] * 3', time: 1623166112515 },
+  { id: 3, from: 'yoyo', to: 'chico', content: '[tail wag] * 5', time: 1623166212515 },
 ];
 
 app.get('/messages', (req, res) => {
   res.json({
-    messages: inMemMessages,
+    messages: inMemMessages.filter(msg => [msg.to, msg.from].includes(req.query.username)),
   });
 });
 
