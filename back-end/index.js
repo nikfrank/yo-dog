@@ -12,9 +12,24 @@ const inMemMessages = [
   { id: 3, from: 'yoyo', to: 'chico', content: '[tail wag] * 5', time: 1623166212515 },
 ];
 
+app.get('/conversations', (req, res)=>{
+  res.json({
+    conversations: [...(new Set(
+      inMemMessages
+        .filter(msg => [msg.to, msg.from].includes(req.query.username))
+        .map(({ from, to }) => (
+          from === req.query.username ? to : from
+        ))
+    ))]
+  });
+});
+
 app.get('/messages', (req, res) => {
   res.json({
-    messages: inMemMessages.filter(msg => [msg.to, msg.from].includes(req.query.username)),
+    messages: inMemMessages.filter(msg => (
+      [msg.to, msg.from].includes(req.query.username) &&
+      [msg.to, msg.from].includes(req.query.other)
+    )),
   });
 });
 

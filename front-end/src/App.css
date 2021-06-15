@@ -1,16 +1,17 @@
 .App {
   display: grid;
-  
+
   grid-template-columns: 12vw 1fr;
   grid-template-rows: 1fr 12vh;
   grid-template-areas: "search messages"
   "search  send-message";
-  
+
   height: 100vh;
 }
 
 .search {
   grid-area: search;
+
   background-color: purple;
 }
 
@@ -40,10 +41,55 @@
 
 .messages {
   grid-area: messages;
+
   background-color: #4f88;
 }
+
+.messages .message-container {
+  display: flex;
+  flex-direction: column;
+}
+
+.messages .message {
+  padding: 12px;
+  border-radius: 4px;
+  margin: 8px;
+  color: cornsilk;
+}
+
+.messages .message.me {
+  align-self: flex-end;
+  background-color: #008;
+}
+
+.messages .message.other {
+  align-self: flex-start;
+  background-color: #080;
+}
+
 
 .send-message {
   grid-area: send-message;
   background-color: #faba;
+
+  position: relative;
 }
+
+.send-message textarea {
+  resize: none;
+  outline: none;
+
+  width: calc(100% - 6px);
+  height: calc(100% - 6px);
+}
+
+.send-message .button-container {
+  position: absolute;
+  right: 5px;
+  top: 0;
+  bottom: 0;
+
+  display: flex;
+  align-items: center;
+}
+
